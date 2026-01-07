@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Validated Form</title>
+  <style>
+    :root{
+      --bg: #0f172a;
+      --card: #0b1220;
+      --muted: #94a3b8;
+      --accent: #2563eb;
+      --error: #ef4444;
+      --success: #16a34a;
+      --input-bg: #ffffff;
+    }
+
+    body{
+      margin:0;
+      font-family: Inter, system-ui, Arial, sans-serif;
+      background: linear-gradient(180deg, #07102a 0%, #081228 100%);
+      color: #e6eef8;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      min-height:100vh;
+      padding:20px;
+    }
+
+    .card{
+      background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02));
+      border-radius:12px;
+      padding:24px;
+      width:100%;
+      max-width:520px;
+      box-shadow: 0 8px 30px rgba(2,6,23,0.6);
+      border: 1px solid rgba(255,255,255,0.04);
+    }
+
+    h1{ margin:0 0 14px 0; font-size:20px; }
+    p.sub { margin:0 0 18px 0; color:var(--muted); font-size:13px; }
+
+    form{ display:grid; gap:14px; }
+
+    label.field{
+      display:block;
+      font-size:13px;
+      color:var(--muted);
+    }
+
+    .input-wrap{ display:flex; flex-direction:column; gap:6px; }
+
+    input[type="text"],
+    input[type="password"],
+    input[type="tel"]{
+      padding:10px 12px;
+      border-radius:8px;
+      border:2px solid rgba(255,255,255,0.08);
+      background: var(--input-bg);
+      font-size:14px;
+      outline:none;
+      transition: border-color 120ms ease, box-shadow 120ms ease;
+    }
+
+    input:focus{
+      border-color: var(--accent);
+      box-shadow: 0 4px 14px rgba(37,99,235,0.12);
+    }
+
+    .input-error{
+      border-color: var(--error) !important;
+      box-shadow: 0 4px 12px rgba(239,68,68,0.08);
+    }
+
+    .input-valid{
+      border-color: var(--success) !important;
+      box-shadow: 0 4px 12px rgba(22,163,74,0.06);
+    }
+
+    .error-msg{
+      color:var(--error);
+      font-size:12px;
+      min-height:16px;
+    }
+
+    .hint{
+      color:var(--muted);
+      font-size:12px;
+    }
+
+    .pw-strength{
+      font-size:12px;
+      font-weight:600;
+    }
+
+    .strength-weak{ color: #ef4444; }
+    .strength-medium{ color: #f59e0b; }
+    .strength-strong{ color: #16a34a; }
+
+    .actions{
+      display:flex;
+      gap:10px;
+      align-items:center;
+      justify-content:space-between;
+      margin-top:4px;
+    }
+
+    button[type="submit"]{
+      background: var(--accent);
+      color:white;
+      padding:10px 14px;
+      border-radius:8px;
+      border:none;
+      cursor:pointer;
+      font-weight:600;
+      box-shadow: 0 8px 24px rgba(37,99,235,0.14);
+      transition: transform 80ms ease, opacity 120ms ease;
+    }
+    button[type="submit"]:disabled{
+      opacity:0.5;
+      cursor:not-allowed;
+      transform:none;
+      box-shadow:none;
+    }
+
+    @media (max-width:520px){
+      .card{ padding:18px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="card" role="region" aria-label="Signup form">
+    <h1>Saurabh Raj</h1>
+    <h1>23SCSE1012732</h1>
+    <h1>Signup Form</h1>
+    <p class="sub">Real-time validation, error highlights and password strength hint.</p>
+
+    <form id="signupForm" novalidate>
+      <div class="input-wrap">
+        <label class="field" for="n1">User ID</label>
+        <input id="n1" name="userid" type="text" autocomplete="username" />
+        <div class="error-msg" id="err-n1" aria-live="polite"></div>
+      </div>
+
+      <div class="input-wrap">
+        <label class="field" for="n2">Contact (10 digits)</label>
+        <input id="n2" name="contact" type="tel" inputmode="numeric" pattern="[0-9]*" maxlength="10" />
+        <div class="error-msg" id="err-n2" aria-live="polite"></div>
+      </div>
+
+      <div class="input-wrap">
+        <label class="field" for="n3">Password</label>
+        <input id="n3" name="password" type="password" autocomplete="new-password" />
+        <div class="hint"><span id="pw-hint">At least 6 characters</span></div>
+        <div class="error-msg" id="err-n3" aria-live="polite"></div>
+      </div>
+
+      <div class="input-wrap">
+        <label class="field" for="n4">Confirm Password</label>
+        <input id="n4" name="confirm" type="password" autocomplete="new-password" />
+        <div class="error-msg" id="err-n4" aria-live="polite"></div>
+      </div>
+
+      <div class="actions">
+        <div class="hint">All fields required</div>
+        <button id="submitBtn" type="submit" disabled>Submit</button>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    // Elements
+    const form = document.getElementById('signupForm');
+    const submitBtn = document.getElementById('submitBtn');
+
+    const fields = {
+      n1: {el: document.getElementById('n1'), err: document.getElementById('err-n1')},
+      n2: {el: document.getElementById('n2'), err: document.getElementById('err-n2')},
+      n3: {el: document.getElementById('n3'), err: document.getElementById('err-n3')},
+      n4: {el: document.getElementById('n4'), err: document.getElementById('err-n4')}
+    };
+
+    // Helper: set error text and styles
+    function setError(field, message) {
+      field.err.textContent = message || '';
+      field.el.classList.toggle('input-error', !!message);
+      field.el.classList.toggle('input-valid', !message && field.el.value.length > 0);
+    }
+
+    // Validation rules:
+    function validateUserId() {
+      const val = fields.n1.el.value.trim();
+      if (!val) return 'User ID required';
+      if (val.length < 3) return 'User ID must be at least 3 characters';
+      return '';
+    }
+
+    function validateContact() {
+      const v = fields.n2.el.value.trim();
+      if (!v) return 'Contact number required';
+      if (!/^\d+$/.test(v)) return 'Only digits allowed';
+      if (v.length !== 10) return 'Contact must be 10 digits';
+      return '';
+    }
+
+    function evaluatePasswordStrength(pw) {
+      let score = 0;
+      if (pw.length >= 6) score++;
+      if (/[A-Z]/.test(pw)) score++;
+      if (/[0-9]/.test(pw)) score++;
+      if (/[\W_]/.test(pw)) score++;
+      // return score 0..4
+      return score;
+    }
+
+    function validatePassword() {
+      const pw = fields.n3.el.value;
+      if (!pw) return 'Password required';
+      if (pw.length < 6) return 'Password must be at least 6 characters';
+      return '';
+    }
+
+    function validateConfirm() {
+      const a = fields.n3.el.value;
+      const b = fields.n4.el.value;
+      if (!b) return 'Please confirm password';
+      if (a !== b) return 'Passwords do not match';
+      return '';
+    }
+
+    // Real-time validation handler
+    function validateAll() {
+      // individual validations
+      setError(fields.n1, validateUserId());
+      setError(fields.n2, validateContact());
+
+      // Password strength hint + validation
+      const pw = fields.n3.el.value;
+      const pwErr = validatePassword();
+      setError(fields.n3, pwErr);
+
+      const strengthScore = evaluatePasswordStrength(pw);
+      const pwHintEl = document.getElementById('pw-hint');
+      if (!pw) {
+        pwHintEl.textContent = 'At least 6 characters';
+        pwHintEl.className = 'pw-strength';
+      } else if (strengthScore <= 1) {
+        pwHintEl.textContent = 'Strength: Weak';
+        pwHintEl.className = 'pw-strength strength-weak';
+      } else if (strengthScore === 2 || strengthScore === 3) {
+        pwHintEl.textContent = 'Strength: Medium';
+        pwHintEl.className = 'pw-strength strength-medium';
+      } else {
+        pwHintEl.textContent = 'Strength: Strong';
+        pwHintEl.className = 'pw-strength strength-strong';
+      }
+
+      setError(fields.n4, validateConfirm());
+
+      // Overall form validity
+      const errors = [
+        validateUserId(),
+        validateContact(),
+        validatePassword(),
+        validateConfirm()
+      ];
+      const isValid = errors.every(e => !e);
+      submitBtn.disabled = !isValid;
+      return isValid;
+    }
+
+    // Attach input listeners for real-time feedback
+    Object.values(fields).forEach(f => {
+      f.el.addEventListener('input', validateAll);
+      // also clear error on focus for better UX
+      f.el.addEventListener('focus', () => {
+        // nothing heavy: just run validate to update UI
+        validateAll();
+      });
+    });
+
+    // On form submit (final check)
+    form.addEventListener('submit', function(e){
+      e.preventDefault(); // prevent default navigation (you can change as needed)
+      if (!validateAll()) {
+        // focus first invalid
+        for (const key in fields) {
+          if (fields[key].err.textContent) {
+            fields[key].el.focus();
+            break;
+          }
+        }
+        return;
+      }
+
+      // If you want to submit to a page, use form.submit() here.
+      // For demo, we'll show a success alert and reset:
+      alert('Form submitted successfully!');
+      form.reset();
+      // reset visuals
+      Object.values(fields).forEach(f => {
+        f.err.textContent = '';
+        f.el.classList.remove('input-error','input-valid');
+      });
+      document.getElementById('pw-hint').textContent = 'At least 6 characters';
+      submitBtn.disabled = true;
+    });
+
+    // initial validation state
+    validateAll();
+  </script>
+</body>
+</html>

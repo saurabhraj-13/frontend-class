@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Myntra Clone — Shop</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <div class="brand">MYNTRA<span class="dot">.</span></div>
+
+      <nav class="nav">
+        <a href="index.html" class="nav-link active">Home</a>
+        <a href="cart.html" class="nav-link">Cart <span id="cart-count-badge">0</span></a>
+      </nav>
+
+      <div class="search-wrap">
+        <input id="search" placeholder="Search for products, brands and more" />
+      </div>
+    </div>
+  </header>
+  <main class="container">
+    <section class="hero">
+      <div class="hero-left">
+        <div>
+    <h1>Name : Saurabh Raj</h1>
+    <h1>Add no. : 23SCSE1012732</h1>
+  </div> <br>
+        <h1>Big Fashion Sale</h1>
+        <p>Up to <strong>70% OFF</strong> — Trendy looks for every mood ✨</p>
+        <a class="cta" href="#products">Shop Trending</a>
+      </div>
+      <div class="hero-right">
+        <img src="fashion banner.jpg" alt="Fashion banner">
+      </div>
+    </section>
+
+    <h2 id="products" class="section-title">Trending Right Now</h2>
+
+    <section id="products-grid" class="products-grid"></section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>© 2025 Myntra Clone • Demo project • Images from Unsplash</p>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+  <script>
+    const products = [
+      {
+        id: "p1",
+        title: "Men's Casual Shirt",
+        price: 599,
+        image: "shirt.jpg"
+      },
+      {
+        id: "p2",
+        title: "Women Printed T-shirt",
+        price: 399,
+        image: "Womenprinted.jpg"
+      },
+      {
+        id: "p3",
+        title: "Running Shoes",
+        price: 1199,
+        image: "Running Shoes.jpg"
+      },
+      {
+        id: "p4",
+        title: "Women Kurti",
+        price: 499,
+        image: "Women Kurti.jpg"
+      },
+      {
+        id: "p5",
+        title: "Denim Jacket",
+        price: 1299,
+        image: "Denim Jacket.webp"
+      },
+      {
+        id: "p6",
+        title: "Casual Dress",
+        price: 899,
+        image: "Casual Dress.jpg"
+      }
+    ];
+
+    const grid = document.getElementById('products-grid');
+
+    function renderProducts(list){
+      grid.innerHTML = '';
+      list.forEach(p => {
+        const card = document.createElement('article');
+        card.className = 'product-card';
+        card.innerHTML = `
+          <div class="product-media">
+            <img loading="lazy" src="${p.image}" alt="${escapeHtml(p.title)}" />
+          </div>
+          <div class="product-body">
+            <h3 class="product-title">${escapeHtml(p.title)}</h3>
+            <div class="product-meta">
+              <div class="price">₹${p.price.toLocaleString()} <small class="mrp">₹${Math.round(p.price*1.9)}</small></div>
+              <button class="btn add-cart" data-id="${p.id}">Add to Cart</button>
+            </div>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    renderProducts(products);
+
+    
+    document.getElementById('products-grid').addEventListener('click', (e) => {
+      const btn = e.target.closest('.add-cart');
+      if (!btn) return;
+      const id = btn.dataset.id;
+      const product = products.find(p => p.id === id);
+      if (!product) return;
+      addToCart(product);
+      
+      btn.innerText = 'Added ✔';
+      btn.disabled = true;
+      setTimeout(()=>{ btn.innerText = 'Add to Cart'; btn.disabled = false; }, 900);
+    });
+
+   
+    document.getElementById('search').addEventListener('input', (ev) => {
+      const q = ev.target.value.trim().toLowerCase();
+      const filtered = products.filter(p => p.title.toLowerCase().includes(q));
+      renderProducts(filtered);
+    });
+
+   
+    function escapeHtml(s){ return s.replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;') }
+
+    // Ensure cart count is up-to-date
+    updateCartBadge();
+  </script>
+</body>
+</html>

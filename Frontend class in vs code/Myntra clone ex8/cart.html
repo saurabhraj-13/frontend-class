@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Cart — Myntra Clone</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <div class="brand">MYNTRA<span class="dot">.</span></div>
+      <nav class="nav">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="cart.html" class="nav-link active">Cart</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <h1>Name : Saurabh Raj</h1>
+    <h1>Add no. : Saurabh Raj</h1>
+    <h2 class="section-title">Your Cart</h2>
+
+    <div id="cart-root" class="cart-container">
+      <div id="cart-items" class="cart-items">
+        <!-- items injected here -->
+      </div>
+
+      <aside class="cart-summary" id="cart-summary">
+        <h3>Order Summary</h3>
+        <div style="margin-top:12px;">
+          <div style="display:flex;justify-content:space-between;margin-bottom:8px;"><span>Subtotal</span><strong id="subtotal">₹0</strong></div>
+          <div style="display:flex;justify-content:space-between;margin-bottom:8px;"><span>Delivery</span><span id="delivery">₹49</span></div>
+          <hr style="margin:12px 0;">
+          <div style="display:flex;justify-content:space-between;font-size:18px;"><span>Total</span><strong id="total">₹0</strong></div>
+          <button id="checkoutBtn" class="btn" style="width:100%; margin-top:14px; background:linear-gradient(90deg,#ff3e6c,#ff6f86); color:white;">Proceed to Payment</button>
+        </div>
+      </aside>
+    </div>
+
+    <p id="empty-msg" style="color:var(--muted); text-align:center; margin-top:18px;"></p>
+  </main>
+
+  <script src="script.js"></script>
+  <script>
+    // Build cart UI
+    const itemsRoot = document.getElementById('cart-items');
+    const subtotalEl = document.getElementById('subtotal');
+    const totalEl = document.getElementById('total');
+    const deliveryEl = document.getElementById('delivery');
+    const emptyMsg = document.getElementById('empty-msg');
+
+    function formatINR(n){ return '₹' + n.toLocaleString(); }
+
+    function renderCart(){
+      const cart = window.myntraCart.getCart();
+      itemsRoot.innerHTML = '';
+      if(!cart.length){
+        emptyMsg.innerText = 'Your cart is empty. Add some trendy items from the store!';
+        subtotalEl.innerText = '₹0';
+        totalEl.innerText = '₹0';
+        return;
+      } else {
+        emptyMsg.innerText = '';
+      }
+
+      cart.forEach(item => {
+        const row = document.createElement('div');
+        row.className = 'cart-row';
+        row.innerHTML = `
+          <div class="cart-thumb"><img src="${item.image}" alt="${item.title}"></div>
+          <div style="flex:1;">
+            <div style="display:flex;justify-content:space-between;align-items:start;">
+              <div>
+                <div style="font-weight:700">${item.title}</div>
+                <div style="color:var(--muted);font-size:13px;margin-top:6px;">Seller: Myntra Pvt Ltd</div>
+              </div>
+              <div style="text-align:right;">
+                <div style="font-weight:800;font-size:16px;">${formatINR(item.price)}</div>
+                <div style="color:var(--muted);font-size:13px;text-decoration:line-through;">${formatINR(Math.round(item.price*1.9))}</div>
+              </div>
+            </div>
+
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-top:12px;">
+              <div class="qty-control">
+                <button class="dec" data-id="${item.id}">−</button>
+                <div style="padding:6px 10px; min-width:36px; text-align:center;">${item.qty}</div>
+                <button class="inc" data-id="${item.id}">+</button>
+              </div>
+
+              <div style="display:flex;gap:8px;align-items:center;">
+                <button class="remove" data-id="${item.id}" style="background:transparent;border:none;color:#ef4444;cursor:pointer">Remove</button>
+              </div>
+            </div>
+          </div>
+        `;
+        itemsRoot.appendChild(row);
+      });
+
+      attachCartListeners();
+      recalcSummary();
+    }
+
+    function attachCartListeners(){
+      document.querySelectorAll('.inc').forEach(b => b.onclick = () => {
+        const id = b.dataset.id;
+        const cart = window.myntraCart.getCart();
+        const it = cart.find(x=>x.id===id);
+        if(it){ it.qty = (it.qty||1) + 1; window.myntraCart.saveCart(cart); renderCart(); }
+      });
+      document.querySelectorAll('.dec').forEach(b => b.onclick = () => {
+        const id = b.dataset.id;
+        const cart = window.myntraCart.getCart();
+        const it = cart.find(x=>x.id===id);
+        if(it){
+          it.qty = Math.max(1, (it.qty||1) - 1);
+          window.myntraCart.saveCart(cart);
+          renderCart();
+        }
+      });
+      document.querySelectorAll('.remove').forEach(b => b.onclick = () => {
+        const id = b.dataset.id;
+        let cart = window.myntraCart.getCart();
+        cart = cart.filter(x=>x.id !== id);
+        window.myntraCart.saveCart(cart);
+        renderCart();
+      });
+    }
+
+    function recalcSummary(){
+      const cart = window.myntraCart.getCart();
+      const subtotal = cart.reduce((s,i)=> s + (i.price * (i.qty||1)), 0);
+      const delivery = subtotal > 999 ? 0 : 49; // demo rule
+      subtotalEl.innerText = formatINR(subtotal);
+      deliveryEl.innerText = formatINR(delivery);
+      totalEl.innerText = formatINR(subtotal + delivery);
+    }
+
+    document.getElementById('checkoutBtn').addEventListener('click', () => {
+      const cart = window.myntraCart.getCart();
+      if (!cart.length) { window.myntraCart.showToast('Add items before checkout'); return; }
+      // go to payment page
+      window.location.href = 'payment.html';
+    });
+
+    // initial render
+    renderCart();
+    // update badge on navigation
+    window.myntraCart.updateCartBadge();
+  </script>
+</body>
+</html>

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Payment — Myntra Clone</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <div class="brand">MYNTRA<span class="dot">.</span></div>
+      <nav class="nav">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="cart.html" class="nav-link">Cart</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <h2 class="section-title">Checkout & Payment</h2>
+
+    <div class="cart-container" style="gap:18px;">
+      <div class="cart-items" id="order-details" style="flex:1;"></div>
+
+      <aside class="cart-summary">
+        <h3>Payment</h3>
+        <div id="pay-summary" style="margin-top:12px;"></div>
+
+        <form id="payment-form" style="margin-top:14px;">
+          <label style="font-weight:700; display:block; margin-bottom:8px;">Card Number</label>
+          <input id="card" placeholder="4242 4242 4242 4242" style="width:100%;padding:10px;border-radius:8px;border:1px solid #e6e9ef;" />
+          <div style="display:flex;gap:8px;margin-top:10px;">
+            <input id="exp" placeholder="MM/YY" style="flex:1;padding:10px;border-radius:8px;border:1px solid #e6e9ef;" />
+            <input id="cvv" placeholder="CVV" style="width:100px;padding:10px;border-radius:8px;border:1px solid #e6e9ef;" />
+          </div>
+          <button id="payBtn" class="btn" style="margin-top:12px;width:100%;background:linear-gradient(90deg,#ff3e6c,#ff6f86);color:#fff;">Pay Now</button>
+        </form>
+      </aside>
+    </div>
+  </main>
+
+  <script src="script.js"></script>
+  <script>
+    const orderRoot = document.getElementById('order-details');
+    const paySummary = document.getElementById('pay-summary');
+
+    function formatINR(n){ return '₹' + n.toLocaleString(); }
+
+    function renderOrder(){
+      const cart = window.myntraCart.getCart();
+      orderRoot.innerHTML = '';
+      if(!cart.length){
+        orderRoot.innerHTML = '<div style="color:var(--muted)">Your cart is empty. Go back to shop.</div>';
+        paySummary.innerHTML = '';
+        document.getElementById('payBtn').disabled = true;
+        return;
+      }
+      cart.forEach(i => {
+        const el = document.createElement('div');
+        el.className = 'cart-row';
+        el.innerHTML = `
+          <div class="cart-thumb"><img src="${i.image}" alt="${i.title}"></div>
+          <div style="flex:1;">
+            <div style="font-weight:700">${i.title}</div>
+            <div style="margin-top:8px;">Qty: ${i.qty}</div>
+            <div style="margin-top:8px;font-weight:800;">${formatINR(i.price * i.qty)}</div>
+          </div>
+        `;
+        orderRoot.appendChild(el);
+      });
+
+      const subtotal = cart.reduce((s,i)=> s + (i.price * i.qty), 0);
+      const delivery = subtotal > 999 ? 0 : 49;
+      const total = subtotal + delivery;
+      paySummary.innerHTML = `
+        <div style="display:flex;justify-content:space-between;"><span>Subtotal</span><strong>${formatINR(subtotal)}</strong></div>
+        <div style="display:flex;justify-content:space-between;"><span>Delivery</span><strong>${formatINR(delivery)}</strong></div>
+        <hr style="margin:10px 0;">
+        <div style="display:flex;justify-content:space-between;font-size:18px;"><span>Total</span><strong>${formatINR(total)}</strong></div>
+      `;
+    }
+
+    document.getElementById('payment-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const cart = window.myntraCart.getCart();
+      if(!cart.length){ window.myntraCart.showToast('Cart empty'); return; }
+
+      // simulate simple validation
+      const card = document.getElementById('card').value.trim();
+      if(!card || card.length < 12){
+        window.myntraCart.showToast('Enter a valid card number');
+        return;
+      }
+      const payBtn = document.getElementById('payBtn');
+      payBtn.disabled = true;
+      payBtn.innerText = 'Processing...';
+
+      setTimeout(() => {
+        // Payment success: clear cart and redirect to success page
+        window.myntraCart.saveCart([]);
+        window.myntraCart.showToast('Payment successful! Order placed.');
+        window.location.href = 'success.html';
+      }, 1400);
+    });
+
+    renderOrder();
+    window.myntraCart.updateCartBadge();
+  </script>
+</body>
+</html>

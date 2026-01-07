@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Text Statistics</title>
+<script>
+function showStats(){
+var text=document.getElementById("text").value;
+var characters=text.length;
+var lines=text.split("\n").length;
+var words=text.trim()===""?0:text.trim().split(/\s+/).length;
+alert("Characters: "+characters+"\nLines: "+lines+"\nWords: "+words);
+}
+</script>
+</head>
+<body>
+
+<h2>Text Statistics</h2>
+
+<textarea id="text" rows="6" cols="40"></textarea><br><br>
+<button onclick="showStats()">Submit</button>
+
+</body>
+</html>

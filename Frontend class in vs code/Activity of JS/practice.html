@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        button{
+            background-color: rgb(115, 255, 0);
+            border: 5px bold ;
+        }
+    </style>
+</head>
+<body>
+    <h1> Activity 1</h1>
+    <h2> JS click event example</h2>
+    <button id ="myBtn"> click me</button>
+    <p id = "message"> </p>
+
+    <script>
+        let button = document.getElementById("myBtn");
+        button.addEventListener("click" , function(){
+        document.getElementById("message").innerHTML="Button was clicked";
+        console.log("Button was clicked");
+        })
+    </script>
+
+    
+</body>
+</html>

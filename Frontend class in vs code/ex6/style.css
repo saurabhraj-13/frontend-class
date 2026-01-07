@@ -1,0 +1,22 @@
+body{
+font-family:Arial;
+background-image:url("page.jpg");
+}
+.heading{
+font-family:Verdana;
+color:blue;
+}
+.text{
+font-family:Georgia;
+color:green;
+}
+.box{
+width:220px;
+height:100px;
+background-image:url("box.jpg");
+color:white;
+padding:10px;
+}
+#1{
+    background-color: aqua;
+}

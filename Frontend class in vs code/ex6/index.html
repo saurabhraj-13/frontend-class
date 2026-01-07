@@ -1,0 +1,49 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html>
+<head>
+<title>Form Validation</title>
+
+<link rel="stylesheet" href="style.css">
+
+<style>
+h2{
+color:blue;
+}
+</style>
+
+<script>
+function validate(){
+var name=document.getElementById("name").value;
+var email=document.getElementById("email").value;
+
+if(name==""){
+alert("Name is required");
+return false;
+}
+if(email==""){
+alert("Email is required");
+return false;
+}
+alert("Form submitted successfully");
+return true;
+}
+</script>
+
+</head>
+<body>
+
+<h2>User Form</h2>
+
+<form onsubmit="return validate()">
+Name:<br>
+<input type="text" id="name" style="background-color:lightyellow;"><br><br>
+
+Email:<br>
+<input type="text" id="email" style="background-color:lightyellow;"><br><br>
+
+<input type="submit" value="Submit">
+</form>
+
+</body>
+</html>

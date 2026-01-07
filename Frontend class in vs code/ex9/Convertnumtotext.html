@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Easy Number to Words</title>
+
+<style>
+body{
+display:flex;
+flex-direction:column;
+align-items:center;
+justify-content:center;
+height:100vh;
+background-color:aliceblue;
+font-family:Arial, sans-serif;
+margin:0;
+}
+
+header{
+text-align:center;
+margin-bottom:20px;
+}
+
+.container{
+border:2px solid black;
+background-color:antiquewhite;
+box-shadow:0 0 50px red;
+padding:15px;
+}
+
+.container:hover{
+box-shadow:0 0 100px yellow;
+}
+
+input{
+padding:5px;
+width:140px;
+border:2px solid black;
+margin-bottom:8px;
+}
+
+button{
+background-color:rgb(30,19,19);
+color:aliceblue;
+padding:5px 10px;
+margin-top:10px;
+}
+
+button:hover{
+box-shadow:0 0 15px red;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+<h1>Name : Saurabh Raj</h1>
+<h3>Admn No : 23SCSE1012732</h3>
+</header>
+
+<div class="container">
+<h2>Convert Number to Words (0 - 999)</h2>
+
+Enter a number:<br>
+<input type="text" id="numBox"><br>
+
+Result:<br>
+<input type="text" id="resultBox" readonly><br>
+
+<button onclick="convert()">Convert</button>
+</div>
+
+<script>
+function oneDigit(n){
+let words=["zero","one","two","three","four","five","six","seven","eight","nine"];
+return words[n];
+}
+
+function twoDigits(n){
+let tens=["","","twenty","thirty","forty","fifty","sixty","seventy","eighty","ninety"];
+let teens=["ten","eleven","twelve","thirteen","fourteen","fifteen","sixteen","seventeen","eighteen","nineteen"];
+
+if(n<10) return oneDigit(n);
+if(n<20) return teens[n-10];
+
+let t=Math.floor(n/10);
+let o=n%10;
+return o===0 ? tens[t] : tens[t]+" "+oneDigit(o);
+}
+
+function convert(){
+let num=document.getElementById("numBox").value;
+
+if(isNaN(num)||num===""){
+document.getElementById("resultBox").value="not a number";
+return;
+}
+
+num=parseInt(num);
+if(num<0||num>999){
+document.getElementById("resultBox").value="out of range";
+return;
+}
+
+let words="";
+if(num<100){
+words=twoDigits(num);
+}else{
+let h=Math.floor(num/100);
+let rem=num%100;
+words=oneDigit(h)+" hundred";
+if(rem!==0) words+=" "+twoDigits(rem);
+}
+document.getElementById("resultBox").value=words;
+}
+</script>
+
+</body>
+</html>

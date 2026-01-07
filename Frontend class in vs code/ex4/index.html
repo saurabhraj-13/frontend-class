@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Map Hot Spots</title>
+    <style>
+        /* Basic styling for the output area */
+        .info-box {
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px solid #ccc;
+            background-color: #f9f9f9;
+            min-height: 100px;
+            font-family: sans-serif;
+        }
+        /* Style for the image itself to ensure it is responsive */
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>Name : Saurabh Raj </h1>
+    <h3>Add No : 23SCSE1012732</h3>
+    <H2>Email : ssaurabhraj@gmail.com</H2>
+    <h2>Mobile no : 9905782647</h2>
+    <h1>Interactive Image Map</h1>
+
+    <!-- 1. The Image and the 'usemap' attribute -->
+    <!-- The 'usemap="#image-map"' links the image to the map element below -->
+    <img src="map.jpg" alt="Image of Geometric Shapes" usemap="#image-map">
+
+    <!-- 2. The Map Element and Hot Spots -->
+    <!-- The 'name="image-map"' attribute matches the 'usemap' attribute above -->
+    <map name="image-map">
+        <!-- Hot spot 1: Circle (coords are center_x, center_y, radius) -->
+        <area shape="circle" coords="100,100,50" alt="Circle" onclick="displayInfo('circle')">
+
+        <!-- Hot spot 2: Rectangle (coords are top_left_x, top_left_y, bottom_right_x, bottom_right_y) -->
+        <area shape="rect" coords="250,50,400,150" alt="Rectangle" onclick="displayInfo('rectangle')">
+
+        <!-- Hot spot 3: Polygon (coords are a series of x,y pairs for each vertex) -->
+        <area shape="poly" coords="550,50,500,150,600,150" alt="Triangle" onclick="displayInfo('triangle')">
+    </map>
+
+    <!-- 3. An area to display information when hot spots are clicked -->
+    <div class="info-box" id="info-output">
+        Click on a shape in the image above to see its details here.
+    </div>
+
+    <!-- 4. JavaScript to handle the click events and update the info box -->
+    <script>
+        function displayInfo(shape) {
+            const outputElement = document.getElementById('info-output');
+            let infoMessage = '';
+
+            switch (shape) {
+                case 'circle':
+                    infoMessage = '<h3>Circle Details</h3><p>This is a circle. A circle is a round plane figure whose boundary (the circumference) consists of points equidistant from a fixed point (the center).</p>';
+                    break;
+                case 'rectangle':
+                    infoMessage = '<h3>Rectangle Details</h3><p>This is a rectangle. A quadrilateral with four right angles.</p>';
+                    break;
+                case 'triangle':
+                    infoMessage = '<h3>Triangle Details</h3><p>This is a triangle. A polygon with three edges and three vertices.</p>';
+                    break;
+                default:
+                    infoMessage = 'Details not available.';
+            }
+
+            outputElement.innerHTML = infoMessage;
+        }
+    </script>
+
+</body>
+</html>

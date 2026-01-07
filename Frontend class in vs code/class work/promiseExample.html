@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Promise Pizza</title>
+</head>
+<body>
+    <h2>Promise Pizza</h2>
+    <p>Press F12 to see the output</p>
+
+    <script>
+        function orderPizza() {
+            return new Promise((resolve, reject) => {
+                console.log("Placing order for pizza...");
+
+                setTimeout(() => {
+                    const isAvailable = true;
+
+                    if (isAvailable) {
+                        resolve("Pizza delivered!");
+                    } else {
+                        reject("Pizza not available!");
+                    }
+                }, 2000);
+            });
+        }
+        orderPizza()
+        .then(message => console.log("Success:", message))
+        .catch(error => console.log("Error:", error));
+    </script>
+</body>
+</html>

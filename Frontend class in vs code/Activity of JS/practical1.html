@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        div{
+            width: 200px;
+             height: 100px;
+            background-color: lightblue;
+            text-align: center;
+            padding-top:40px ;
+        }
+    </style>
+</head>
+<body>
+    <h1> Activity 1 </h1>
+    <div id = "box">Hover me</div>
+    <p id = "msg"></p>
+    <script>
+         // select box
+        let box = document.getElementById("box");
+        // add mouse hover event
+        box.addEventListener("mouseover" , function(){
+            document.getElementById("msg").innerHTML = "Mouse is over the box";
+            box.style.backgroundColor= "yellow";
+        });
+        box.addEventListener("mouseout" , function(){
+            document.getElementById("msg").innerHTML="";
+            box.style.backgroundColor= "lightblue";
+        });
+    </script>
+</body>
+</html>

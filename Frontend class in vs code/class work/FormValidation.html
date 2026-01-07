@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>form</title>
+    <style>
+        div{
+            background-color: aliceblue;
+            border: 2px solid rgb(0, 212, 25);
+            border-radius: 10px;
+            padding: 10px;
+            box-shadow:0 0 15px rgb(58, 220, 4);
+                }
+                div:hover{
+                    box-shadow: 0 0 15px rgb(255, 0, 225);
+                }
+        body{
+            background-color: aliceblue;
+            align-items: center;
+            font-family: Arial, Helvetica, sans-serif;
+            justify-content: center;
+            height: 100vh;
+            display: flex;
+        }
+
+        input{
+            padding: 5px;
+            width: 50 px;
+            border: 2px solid black;
+
+        }
+
+        label{
+            display: inline-block;
+            width: 140px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        .submit{
+            background-color: rgb(30, 19, 19);
+            color: aliceblue;
+        }
+        .submit:hover{
+            box-shadow: 0 0 15px rgb(255, 0, 0);
+        }
+        h1{
+            align-items: center;
+            display: inline block;
+        }
+    </style>
+</head>
+<body>
+    
+    <script>
+        function data(){
+            var a = document.getElementById("n1").value;
+            var b = document.getElementById("n2").value;
+            var c = document.getElementById("n3").value;
+            var d = document.getElementById("n4").value;
+            var e = document.getElementById("n5").value;
+
+         var emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if(a=="" || b == "" || c =="" || d == ""){
+                alert("All feilds are mandatory");
+                return false;
+            }
+            else if(b.length < 10 || b.length>10){
+                alert("Number should be of 10 digit! Please eneter valid number");
+                return false;
+            }
+            else if(!emailPattern(e)){
+                alert("Please enter the valid email ")
+                return false;
+            }
+            else if(isNaN(b)){
+                alert("Only number allowed please enter valid number");
+                return false;
+            }
+            else if(c!=d){
+                alert("Password not match");
+                return false;
+            }
+            else{
+                return true;
+        }
+        }
+    </script>
+    
+    <div >
+    <form onsubmit = "return data()" action="new.html">
+       <label >UserId: </label>          <input type="text" id="n1"><br> <br>
+        <label> Contact: </label>   <input type="text" id="n2"><br> <br>
+        <label> Email: </label> <input type = "text" id ="n5"><br><br>
+       <label> Password: </label>        <input type="password" id="n3"><br> <br>
+        <label>Confirm Password:  </label> <input type="password" id="n4"><br> <br>
+        <input type = "Submit" value = "Submit" class = "submit">
+    </form>
+    </div>
+    
+</body>
+</html>
